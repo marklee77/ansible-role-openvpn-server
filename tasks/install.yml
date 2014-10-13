@@ -1,54 +1,23 @@
 ---
-- name: ensure mariadb dependency packages are installed
+- name: ensure openvpn packages are installed
   apt: 
     pkg: "{{ item }}"
     state: latest 
     update_cache: yes 
     cache_valid_time: 600
   with_items:
-    - python-mysqldb
-    - python-software-properties
+    - openvpn
+    - easy-rsa
+    - openvpn-auth-ldap
 
-- name: ensure mariadb repository public key is installed
-  command: apt-key adv --recv-key --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db
-  register: apt_key
-  changed_when: apt_key.stderr.find("imported") != -1
-
-- name: ensure mariadb repository is enabled
-  apt_repository: 
-    repo: deb {{ mariadb_repository_mirror }}/repo/{{ mariadb_version }}/ubuntu {{ ansible_distribution_release }} main
-    update_cache: yes
-    state: present
-
-- name: ensure mariadb packages are installed
-  apt: 
-    pkg: "{{ item }}"
-    state: latest 
-    update_cache: yes 
-    cache_valid_time: 600
-  with_items:
-    - mariadb-server
-    - mariadb-client
-
-- name: ensure mariadb is started and enabled
+- name: ensure openvpn is started and enabled
   service: 
-    name: mysql
+    name: openvpn
     state: started 
     enabled: yes
 
-- name: ensure anonymous users are not in the database
-  mysql_user: 
-    name: "" 
-    host: "{{ item }}"
-    state: absent
-  with_items:
-    - localhost
-    - 127.0.0.1
-    - ::1
-    - "%"
-
-- name: ensure mariadb is properly shut down for docker
+- name: ensure openvpn is properly shut down for docker
   service: 
-    name: mysql
+    name: openvpn
     state: stopped
-  when: mariadb_docker_host is defined
+  when: openvpn_dockerize_context is defined

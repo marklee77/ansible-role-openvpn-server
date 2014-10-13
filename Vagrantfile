@@ -23,19 +23,19 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ansible.playbook = "getreqs.yml"
   end
 
-  config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "prep.yml"
-  end
+  #config.vm.provision "ansible" do |ansible|
+  #  ansible.playbook = "prep.yml"
+  #end
 
-  config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "deploy.yml"
-    ansible.extra_vars = {
-      mariadb_dockerized_deployment: true
-    }
-  end
+  #config.vm.provision "ansible" do |ansible|
+  #  ansible.playbook = "deploy.yml"
+  #  ansible.extra_vars = {
+  #    mariadb_dockerized_deployment: true
+  #  }
+  #end
 
-  config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "test.yml"
-  end
+  #config.vm.provision "ansible" do |ansible|
+  #  ansible.playbook = "test.yml"
+  #end
 
 end
