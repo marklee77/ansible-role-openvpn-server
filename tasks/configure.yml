@@ -1,4 +1,13 @@
 ---
+- name: update server.conf from template
+  template:
+    src: etc/openvpn/server.conf
+    dest: /etc/openvpn/server.conf
+    owner: root
+    group: root
+    mode: 0644
+  register: server_conf
+
 - name: restart openvpn
   service:
     name: openvpn
