@@ -10,4 +10,4 @@ VOLUME [ "/etc/openvpn", "/var/log/openvpn" ]
 
 CMD [ "/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf" ]
 
-#EXPOSE 3306
+EXPOSE 1194/udp
