@@ -1,12 +1,9 @@
 ---
 - include: docker.yml
-  when: mariadb_dockerized_deployment
+  when: openvpn_server_dockerized_deployment
 
 - include: install.yml
-  when: not mariadb_dockerized_deployment
+  when: not openvpn_server_dockerized_deployment
 
-- include: offline_configuration.yml
-  when: not mariadb_dockerized_deployment 
-
-- include: online_configuration.yml
-  when: not mariadb_dockerized_deployment
+- include: configure.yml
+  when: not openvpn_server_dockerized_deployment 

@@ -10,7 +10,7 @@ openvpn_dh_file: /etc/openvpn/dh2048.pem
 openvpn_private_network: 10.7.7.0 255.255.255.0
 
 # The variables below only apply to dockerized deployment
-openvpn_dockerized_deployment: false
-openvpn_docker_username: default
-openvpn_docker_imagename: openvpn
-openvpn_docker_containername: openvpn
+openvpn_server_dockerized_deployment: false
+openvpn_server_docker_username: default
+openvpn_server_docker_imagename: openvpn-server
+openvpn_server_docker_containername: openvpn
