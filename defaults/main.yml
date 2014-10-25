@@ -5,7 +5,7 @@ openvpn_proto: udp
 openvpn_ssl_cert_file: /etc/openvpn/server.crt
 openvpn_ssl_key_file: /etc/openvpn/server.key
 openvpn_ssl_cacert_file: /etc/openvpn/ca.crt
-openvpn_dh_file: /etc/openvpn/dh1024.pem
+openvpn_dh_file: /etc/openvpn/dh2048.pem
 
 openvpn_private_network: 10.7.7.0 255.255.255.0
 
