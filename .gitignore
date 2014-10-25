@@ -1,4 +1,4 @@
-*.swp
+.*.swp
 .vagrant
 private
 roles/*
