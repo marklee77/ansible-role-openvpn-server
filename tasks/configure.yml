@@ -20,7 +20,7 @@
       -keyout {{ openvpn_cacert_file|replace(".crt", ".key" }}
     creates={{ openvpn_cacert_file }}
 
-- name: 
+- name: create server key and csr if required
   command: >
     openssl req -newkey rsa:2048 -nodes
       -days 365 -subj "/CN=openvpn-server"
@@ -28,12 +28,16 @@
       -keyout {{ openvpn_key_file }}
     creates={{ openvpn_key_file }}
  
-- name: 
+- name: sign server certificate if required
   command: >
     openssl x509 -req -in {{ openvpn_cert_file|replace(".crt", ".csr" }}
     -CA {{ openvpn_cacert_file }} -CAkey {{ openvpn_cacert_file|replace(".crt", ".key" }}
     -CAcreateserial -out [{ openvpn_cert_file }}
     creates={{ openvpn_cert_file }}
+
+- name: generate ta.key if necessary
+  command: openvpn --genkey --secret /etc/openvpn/ta.key
+           creates=/etc/openvpn/ta.key
 
 - name: restart openvpn
   service:
