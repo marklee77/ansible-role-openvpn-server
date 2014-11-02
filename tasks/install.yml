@@ -9,9 +9,3 @@
     - openvpn
     - easy-rsa
     - openvpn-auth-ldap
-
-- name: ensure openvpn is started and enabled
-  service: 
-    name: openvpn
-    state: started 
-    enabled: yes

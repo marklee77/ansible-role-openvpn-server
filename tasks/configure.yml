@@ -1,26 +1,18 @@
 ---
-- name: update server.conf from template
-  template:
-    src: etc/openvpn/server.conf
-    dest: /etc/openvpn/server.conf
-    owner: root
-    group: root
-    mode: 0644
-  register: server_conf
-
 - name: create self-signed ca key/certificate pair if required
   shell: >
-    make-cadir /etc/openvpn/easy-rsa
-    cd /etc/openvpn/easy-rsa
-    . vars
-    ./pkitool --batch --initca 
+    make-cadir /etc/openvpn/easy-rsa &&
+    cd /etc/openvpn/easy-rsa &&
+    . /etc/openvpn/easy-rsa/vars &&
+    /etc/openvpn/easy-rsa/clean-all &&
+    /etc/openvpn/easy-rsa/pkitool --batch --initca 
     creates={{ openvpn_ca_cert_file }}
 
 - name: create server key/certificate pair if required
   shell: >
-    cd /etc/openvpn/easy-rsa
-    . vars
-    ./pkitool --batch --server server
+    cd /etc/openvpn/easy-rsa &&
+    . /etc/openvpn/easy-rsa/vars &&
+    /etc/openvpn/easy-rsa/pkitool --batch --server server
     creates={{ openvpn_cert_file }}
 
 - name: create dh file if necessary
@@ -31,8 +23,31 @@
   command: openvpn --genkey --secret {{ openvpn_ta_key_file }}
            creates={{ openvpn_ta_key_file }}
 
+- name: ensure that openvpn log directory exists
+  file:
+    dest: /var/log/openvpn
+    owner: root
+    group: root
+    mode: 0755
+    state: directory
+
+- name: update server.conf from template
+  template:
+    src: etc/openvpn/server.conf
+    dest: /etc/openvpn/server.conf
+    owner: root
+    group: root
+    mode: 0644
+  register: server_conf
+
 - name: restart openvpn
   service:
     name: openvpn
     state: restarted
   when: server_conf|changed
+
+- name: ensure openvpn is started and enabled
+  service:
+    name: openvpn
+    state: started
+    enabled: yes
