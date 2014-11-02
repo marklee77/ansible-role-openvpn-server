@@ -3,12 +3,10 @@ openvpn_bind_address: 0.0.0.0
 openvpn_port: 1194
 openvpn_proto: udp
 
-openvpn_hostname: localhost
-openvpn_ca_name: "{{ openvpn_hostname }} CA"
-openvpn_ca_cert_file: /etc/openvpn/ssl/certs/ca.crt
-openvpn_ca_key_file: /etc/openvpn/ssl/private/ca.key
-openvpn_cert_file: /etc/openvpn/ssl/certs/server.crt
-openvpn_key_file: /etc/openvpn/ssl/private/server.key
+openvpn_ca_cert_file: /etc/openvpn/easy-rsa/keys/ca.crt
+openvpn_ca_key_file: /etc/openvpn/easy-rsa/keys/ca.key
+openvpn_cert_file: /etc/openvpn/easy-rsa/keys/server.crt
+openvpn_key_file: /etc/openvpn/easy-rsa/keys/server.key
 openvpn_dh_file: /etc/openvpn/dh2048.pem
 openvpn_ta_key_file: /etc/openvpn/ta.key
 

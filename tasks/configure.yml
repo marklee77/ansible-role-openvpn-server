@@ -9,25 +9,18 @@
   register: server_conf
 
 - name: create self-signed ca key/certificate pair if required
-  command: >
-    openssl req -new -newkey rsa:2048 -x509 -nodes -days 3650 
-      -out {{ openvpn_ca_cert_file }} -keyout {{ openvpn_ca_key_file }}
-      -subj "/CN={{ openvpn_ca_name }}" 
+  shell: >
+    make-cadir /etc/openvpn/easy-rsa
+    cd /etc/openvpn/easy-rsa
+    . vars
+    ./pkitool --batch --initca 
     creates={{ openvpn_ca_cert_file }}
 
-- name: create server key and csr if required
-  command: >
-    openssl req -new -newkey rsa:2048 -nodes -days 3650 -extensions server
-      -subj "/CN={{ openvpn_hostname }}"
-      -out {{ openvpn_cert_file|replace(".crt", ".csr" }}
-      -keyout {{ openvpn_key_file }}
-    creates={{ openvpn_key_file }}
-
-- name: sign server certificate if required
-  command: >
-    openssl x509 -req -in {{ openvpn_cert_file|replace(".crt", ".csr" }}
-    -CA {{ openvpn_cacert_file }} -CAkey {{ openvpn_cacert_file|replace(".crt", ".key" }}
-    -CAcreateserial -out [{ openvpn_cert_file }}
+- name: create server key/certificate pair if required
+  shell: >
+    cd /etc/openvpn/easy-rsa
+    . vars
+    ./pkitool --batch --server server
     creates={{ openvpn_cert_file }}
 
 - name: create dh file if necessary
