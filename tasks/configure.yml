@@ -8,9 +8,35 @@
     mode: 0644
   register: server_conf
 
+- name: create self-signed ca key/certificate pair if required
+  command: >
+    openssl req -new -newkey rsa:2048 -x509 -nodes -days 3650 
+      -out {{ openvpn_ca_cert_file }} -keyout {{ openvpn_ca_key_file }}
+      -subj "/CN={{ openvpn_ca_name }}" 
+    creates={{ openvpn_ca_cert_file }}
+
+- name: create server key and csr if required
+  command: >
+    openssl req -new -newkey rsa:2048 -nodes -days 3650 -extensions server
+      -subj "/CN={{ openvpn_hostname }}"
+      -out {{ openvpn_cert_file|replace(".crt", ".csr" }}
+      -keyout {{ openvpn_key_file }}
+    creates={{ openvpn_key_file }}
+
+- name: sign server certificate if required
+  command: >
+    openssl x509 -req -in {{ openvpn_cert_file|replace(".crt", ".csr" }}
+    -CA {{ openvpn_cacert_file }} -CAkey {{ openvpn_cacert_file|replace(".crt", ".key" }}
+    -CAcreateserial -out [{ openvpn_cert_file }}
+    creates={{ openvpn_cert_file }}
+
+- name: create dh file if necessary
+  command: openssl dhparam -out {{ openvpn_dh_file }} 2048
+           creates={{ openvpn_dh_file }}
+
 - name: generate ta.key
-  command: openvpn --genkey --secret /etc/openvpn/ta.key
-           creates=/etc/openvpn/ta.key
+  command: openvpn --genkey --secret {{ openvpn_ta_key_file }}
+           creates={{ openvpn_ta_key_file }}
 
 - name: restart openvpn
   service:
