@@ -13,12 +13,8 @@
            creates={{ openvpn_dh_file }}
 
 - name: create self-signed ca key/certificate pair if required
-  command: >
-    openssl req -newkey rsa:2048 -x509 -nodes -extensions server
-      -days 365 -subj "/CN=openvpn-ca"
-      -out {{ openvpn_cacert_file }}
-      -keyout {{ openvpn_cacert_file|replace(".crt", ".key" }}
-    creates={{ openvpn_cacert_file }}
+  command: openssl req -newkey rsa:2048 -x509 -nodes -extensions server -days 365 -subj "/CN=openvpn-ca" -out {{ openvpn_cacert_file }} -keyout {{ openvpn_cacert_file|replace(".crt", ".key" }} 
+           creates={{ openvpn_cacert_file }}
 
 - name: create server key and csr if required
   command: >

@@ -15,9 +15,3 @@
     name: openvpn
     state: started 
     enabled: yes
-
-- name: ensure openvpn is properly shut down for docker
-  service: 
-    name: openvpn
-    state: stopped
-  when: openvpn_dockerize_context is defined
