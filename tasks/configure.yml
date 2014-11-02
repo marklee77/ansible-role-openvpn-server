@@ -8,30 +8,7 @@
     mode: 0644
   register: server_conf
 
-- name: create dh file if necessary
-  command: openssl dhparam -out {{ openvpn_dh_file }} 2048
-           creates={{ openvpn_dh_file }}
-
-- name: create self-signed ca key/certificate pair if required
-  command: openssl req -newkey rsa:2048 -x509 -nodes -extensions server -days 365 -subj "/CN=openvpn-ca" -out {{ openvpn_cacert_file }} -keyout {{ openvpn_cacert_file|replace(".crt", ".key" }} 
-           creates={{ openvpn_cacert_file }}
-
-- name: create server key and csr if required
-  command: >
-    openssl req -newkey rsa:2048 -nodes
-      -days 365 -subj "/CN=openvpn-server"
-      -out {{ openvpn_cert_file|replace(".crt", ".csr" }}
-      -keyout {{ openvpn_key_file }}
-    creates={{ openvpn_key_file }}
- 
-- name: sign server certificate if required
-  command: >
-    openssl x509 -req -in {{ openvpn_cert_file|replace(".crt", ".csr" }}
-    -CA {{ openvpn_cacert_file }} -CAkey {{ openvpn_cacert_file|replace(".crt", ".key" }}
-    -CAcreateserial -out [{ openvpn_cert_file }}
-    creates={{ openvpn_cert_file }}
-
-- name: generate ta.key if necessary
+- name: generate ta.key
   command: openvpn --genkey --secret /etc/openvpn/ta.key
            creates=/etc/openvpn/ta.key
 
@@ -39,4 +16,4 @@
   service:
     name: openvpn
     state: restarted
-  when: server_conf|changed and openvpn_dockerize_context is not defined
+  when: server_conf|changed

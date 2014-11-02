@@ -5,7 +5,6 @@ COPY . /var/cache/ansible/openvpn-server
 WORKDIR /var/cache/ansible/openvpn-server
 
 RUN ansible-playbook -i inventories/local.ini provisioning/install.yml && \
-    service mysql stop
 
 VOLUME [ "/etc/openvpn", "/var/log/openvpn" ]
 
